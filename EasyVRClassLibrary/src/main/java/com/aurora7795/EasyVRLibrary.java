@@ -320,6 +320,7 @@ public class EasyVRLibrary {
 
                 try {
                     rx = ReceiveArgumentAsChar();
+                    //sp,etjonmg
                     Value = rx;
                 } catch (IOException e) {
                     e.printStackTrace();
