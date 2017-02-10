@@ -8,5 +8,6 @@ import java.io.IOException;
 public interface ISerialPortWrapper {
 
     char Read() throws IOException;
-    void Write(String request) throws IOException ;
+
+    void Write(char request) throws IOException;
 }

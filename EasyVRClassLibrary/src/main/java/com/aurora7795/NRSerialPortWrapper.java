@@ -11,13 +11,13 @@ import static gnu.io.NRSerialPort.getAvailableSerialPorts;
 /**
  * Created by aurora7795 on 09/02/2017.
  */
-public class OSXSerialPortWrapper implements ISerialPortWrapper {
+public class NRSerialPortWrapper implements ISerialPortWrapper {
 
     DataInputStream ins;
     DataOutputStream outs;
     NRSerialPort serial;
 
-    public OSXSerialPortWrapper(String port, int baudRate){
+    public NRSerialPortWrapper(String port, int baudRate) {
 
         for (String s : getAvailableSerialPorts()) {
             System.out.println("Available port: " + s);
@@ -33,25 +33,33 @@ public class OSXSerialPortWrapper implements ISerialPortWrapper {
 
     /**
      * Reads a byte off the input buffer
+     *
      * @return The byte output from the serial port
      * @throws IOException
      */
     public char Read() throws IOException {
         byte b = (byte) ins.read();
         char c = ((char) b);
+        System.out.printf("Character off buffer: %s%n", c);
         return c;
     }
 
     /**
-     * Writes a string to the serial port
+     * Writes a character to the serial port
+     *
      * @param request the string to send to the serial port
      * @throws IOException
      */
+    public void Write(char request) throws IOException {
+        System.out.printf("writing: %s%n", request);
+        outs.write(request);
+    }
+
     public void Write(String request) throws IOException {
 
-        char[] tempArray = request.toCharArray();
+        char[] charArray = request.toCharArray();
 
-        for (char tempChar : tempArray) {
+        for (char tempChar : charArray) {
             outs.write(tempChar);
         }
     }
@@ -59,7 +67,13 @@ public class OSXSerialPortWrapper implements ISerialPortWrapper {
     /**
      * Disconnects the serial port
      */
-    public void Disconnect(){
+    public void Disconnect() {
+        serial.disconnect();
+    }
+
+    @Override
+    public void finalize() {
+        System.out.println("finalize called");
         serial.disconnect();
     }
 }
