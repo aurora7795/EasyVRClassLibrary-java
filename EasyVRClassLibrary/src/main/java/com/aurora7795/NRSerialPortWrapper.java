@@ -17,6 +17,8 @@ public class NRSerialPortWrapper implements ISerialPortWrapper {
     DataOutputStream outs;
     NRSerialPort serial;
 
+    private char internalResponseBuffer;
+
     public NRSerialPortWrapper(String port, int baudRate) {
 
         for (String s : getAvailableSerialPorts()) {
@@ -32,16 +34,24 @@ public class NRSerialPortWrapper implements ISerialPortWrapper {
     }
 
     /**
-     * Reads a byte off the input buffer
+     * Reads a byte off the internal buffer
      *
      * @return The byte output from the serial port
      * @throws IOException
      */
     public char Read() throws IOException {
+
+        //small sleep to allow before calling read - was having problems without it...
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         byte b = (byte) ins.read();
         char c = ((char) b);
         System.out.printf("Character off buffer: %s%n", c);
-        return c;
+        internalResponseBuffer = c;
+        return internalResponseBuffer;
     }
 
     /**
@@ -51,8 +61,18 @@ public class NRSerialPortWrapper implements ISerialPortWrapper {
      * @throws IOException
      */
     public void Write(char request) throws IOException {
+
+        // to keep responses in sync - on writing, we also send a read and push the response to an internal
+        // buffer
+
         System.out.printf("writing: %s%n", request);
         outs.write(request);
+
+        byte b = (byte) ins.read();
+        char c = ((char) b);
+        System.out.printf("Character off buffer: %s%n", c);
+        internalResponseBuffer = c;
+
     }
 
     public void Write(String request) throws IOException {

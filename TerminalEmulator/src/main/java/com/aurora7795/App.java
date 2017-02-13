@@ -34,8 +34,8 @@ public class App extends Application {
 
     }
 
-    @Override
-    public void stop() {
-        ((Controller) fxmlLoader.getController()).serialPort.Disconnect();
-    }
+//    @Override
+//    public void stop() {
+//        ((Controller) fxmlLoader.getController()).serialPort.Disconnect();
+//    }
 }

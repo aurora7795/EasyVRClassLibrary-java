@@ -21,6 +21,7 @@ public class Controller {
     public TextArea requestTB;
     public ChoiceBox<String> portListBox;
     public Button ConnectBtn;
+    public Button readBtn;
 
     NRSerialPortWrapper serialPort;
 
@@ -62,5 +63,13 @@ public class Controller {
         serialPort = new NRSerialPortWrapper(port, 9600);
         responseTB.appendText(String.format("Connected to %s%s", port, System.getProperty("line.separator")));
         shouldBeDisabled.setValue(false);
+    }
+
+    public void readClick(ActionEvent actionEvent) {
+        try {
+            responseTB.appendText(String.format("%s%s", serialPort.Read(), System.getProperty("line.separator")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

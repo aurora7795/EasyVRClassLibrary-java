@@ -12,7 +12,7 @@ public class EasyVRLibrary {
     public static int EASYVR_STORAGE_TIMEOUT = 500;
     public static int DEF_TIMEOUT = EASYVR_RX_TIMEOUT;
     public static int STORAGE_TIMEOUT = EASYVR_STORAGE_TIMEOUT;
-    static NRSerialPortWrapper _serialPort;
+    static purejavacommWrapper _serialPort;
     public int EASYVR_WAKE_TIMEOUT = 200;
     public int EASYVR_PLAY_TIMEOUT = 5000;
     public int EASYVR_TOKEN_TIMEOUT = 1500;
@@ -24,7 +24,7 @@ public class EasyVRLibrary {
     public EasyVRLibrary(String portName, int baudRate) {
         if (_serialPort != null) return;
         // Create the serial port with basic settings
-        _serialPort = new NRSerialPortWrapper(portName, baudRate);
+        _serialPort = new purejavacommWrapper(portName, baudRate);
 
         Value = -1;
         Group = -1;
@@ -77,7 +77,8 @@ public class EasyVRLibrary {
 
     private static char GetResponse(int timeout) throws IOException {
         //TODO: sort out issues with timeout
-        // _serialPort.ReadTimeout = timeout > 0 ? timeout : SerialPort.InfiniteTimeout;
+        _serialPort.setTimeout(timeout);
+
 
         char temp;
         temp = _serialPort.Read();
@@ -275,8 +276,7 @@ public class EasyVRLibrary {
         }
 
         int decodedValue = ArgumentEncoding.ConvertArgumentCode(response);
-
-
+        return decodedValue;
     }
 
     public Boolean PlayPhoneTone(int tone, int duration) {
