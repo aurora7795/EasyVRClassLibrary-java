@@ -206,6 +206,15 @@ public class EasyVRLibrary {
         SendArgument(timeout & 0x1F);
     }
 
+    /**
+     * Retrieves the contents of a built-in or a custom grammar.
+     * Command labels contained in the grammar can be obtained by calling #getNextWordLabel()
+     * @param grammar (0-31) is the target grammar, or one of the values in #Wordset
+     * @return DumpGrammarResult is successful, containing:
+     *  Flags - a variable that holds some grammar flags when the function returns. See #GrammarFlag
+     *  Count - count is a variable that holds the number of words in the grammar when the function returns.
+     *  Null if failed
+     */
     public DumpGrammarResult DumpGrammar(int grammar) {
         DumpGrammarResult response = new DumpGrammarResult();
 
