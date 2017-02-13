@@ -13,6 +13,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 public class Controller {
@@ -23,7 +24,7 @@ public class Controller {
     public Button ConnectBtn;
     public Button readBtn;
 
-    NRSerialPortWrapper serialPort;
+    purejavacommWrapper serialPort;
 
     private BooleanProperty shouldBeDisabled;
 
@@ -31,10 +32,10 @@ public class Controller {
     public void initialize() {
         shouldBeDisabled = new SimpleBooleanProperty(true);
 
-        Set<String> availableSerialPorts = NRSerialPort.getAvailableSerialPorts();
-        String[] tempList = new String[availableSerialPorts.size()];
-        availableSerialPorts.toArray(tempList);
-        ObservableList<String> portList = FXCollections.observableArrayList(tempList);
+        List<String> availableSerialPorts = purejavacommWrapper.getAvailableSerialPorts();
+//        String[] tempList = new String[availableSerialPorts.Size()];
+//        availableSerialPorts.toArray(tempList);
+        ObservableList<String> portList = FXCollections.observableArrayList(availableSerialPorts);
         portListBox.setItems(portList);
 
         sendBtn.disableProperty().bind(shouldBeDisabled);
@@ -60,7 +61,7 @@ public class Controller {
 
         String port = portListBox.getValue();
 
-        serialPort = new NRSerialPortWrapper(port, 9600);
+        serialPort = new purejavacommWrapper(port, 9600);
         responseTB.appendText(String.format("Connected to %s%s", port, System.getProperty("line.separator")));
         shouldBeDisabled.setValue(false);
     }

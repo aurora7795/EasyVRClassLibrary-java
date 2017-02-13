@@ -10,4 +10,6 @@ public interface ISerialPortWrapper {
     char Read() throws IOException;
 
     void Write(char request) throws IOException;
+
+    void SetTimeout(int timeout);
 }

@@ -10,7 +10,35 @@ import com.aurora7795.EasyVRLibrary.*;
  */
 public class EasyVRLibraryTest extends TestCase {
 
-    private String comPort = "/dev/tty.usbserial-fd1";
+    public void testDumpMessage() throws Exception {
+        //Arrange
+        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        tempVr.ResetAll();
+        //Act
+        DumpMessageResult response = tempVr.DumpMessage((byte) 0);
+        //Assert
+        assertNotNull(response);
+        assertTrue(response.length == 0);
+        assertTrue(response.type == 0);
+
+    }
+
+    public void testDumpGrammar() throws Exception {
+        //Arrange
+        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        //Act
+        byte flags;
+        int count;
+        DumpGrammarResult response = tempVr.DumpGrammar(0);
+        //Assert
+        assertNotNull(response);
+        assertTrue(response.flags > 0);
+        assertTrue(response.count > 0);
+
+    }
+
+    // private String comPort = "/dev/tty.usbserial-fd1";
+    private String comPort = "COM3";
     private int baudRate = 9600;
 
     public void testChangeBaudrate() throws Exception {

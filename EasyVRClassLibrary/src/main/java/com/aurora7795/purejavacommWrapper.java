@@ -3,7 +3,10 @@ package com.aurora7795;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Set;
 
 import purejavacomm.*;
 
@@ -91,7 +94,7 @@ public class purejavacommWrapper implements ISerialPortWrapper{
         _serialPort.close();
     }
 
-    public void setTimeout(int timeout){
+    public void SetTimeout(int timeout){
 
         if(timeout > 0) {
 
@@ -100,12 +103,25 @@ public class purejavacommWrapper implements ISerialPortWrapper{
             } catch (UnsupportedCommOperationException e) {
                 e.printStackTrace();
             }
-            System.out.printf("Timeout set to%d%n", _serialPort.getReceiveTimeout());
+            System.out.printf("Timeout set to: %d ms %n", _serialPort.getReceiveTimeout());
         }
         else{
             _serialPort.disableReceiveTimeout();
             System.out.println("Timeout disabled.");
         }
 
+    }
+
+    public static List<String> getAvailableSerialPorts(){
+    List<String> list = new ArrayList<String>();
+
+    Enumeration portList = CommPortIdentifier.getPortIdentifiers();
+    while (portList.hasMoreElements()) {
+        CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();
+        if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+            list.add(portId.getName());
+        }
+    }
+    return list;
     }
 }

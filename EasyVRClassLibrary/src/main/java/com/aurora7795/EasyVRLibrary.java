@@ -1,5 +1,7 @@
 package com.aurora7795;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.io.IOException;
 
 import static com.aurora7795.Protocol.*;
@@ -12,7 +14,6 @@ public class EasyVRLibrary {
     public static int EASYVR_STORAGE_TIMEOUT = 500;
     public static int DEF_TIMEOUT = EASYVR_RX_TIMEOUT;
     public static int STORAGE_TIMEOUT = EASYVR_STORAGE_TIMEOUT;
-    static purejavacommWrapper _serialPort;
     public int EASYVR_WAKE_TIMEOUT = 200;
     public int EASYVR_PLAY_TIMEOUT = 5000;
     public int EASYVR_TOKEN_TIMEOUT = 1500;
@@ -20,6 +21,8 @@ public class EasyVRLibrary {
     protected byte Id;
     private int Value;
     private Status _status = new Status();
+
+    static ISerialPortWrapper _serialPort;
 
     public EasyVRLibrary(String portName, int baudRate) {
         if (_serialPort != null) return;
@@ -76,10 +79,8 @@ public class EasyVRLibrary {
 
 
     private static char GetResponse(int timeout) throws IOException {
-        //TODO: sort out issues with timeout
-        _serialPort.setTimeout(timeout);
 
-
+        _serialPort.SetTimeout(timeout);
         char temp;
         temp = _serialPort.Read();
         System.out.printf("read off buffer: %s%n", temp);
@@ -94,8 +95,8 @@ public class EasyVRLibrary {
      * @return true if the operation is successful
      */
     public Boolean AddCommand(int group, int index) {
-//        if (group < 0 || group > 16) throw new ArgumentOutOfRangeException(nameof(group));
-//        if (index < 0 || index > 31) throw new ArgumentOutOfRangeException(nameof(index));
+        if (group < 0 || group > 16) throw new IllegalArgumentException(Integer.toString(group));
+        if (index < 0 || index > 31) throw new IllegalArgumentException(Integer.toString(index));
 
         SendCommand(CMD_GROUP_SD);
         SendArgument(group);
@@ -209,13 +210,16 @@ public class EasyVRLibrary {
     /**
      * Retrieves the contents of a built-in or a custom grammar.
      * Command labels contained in the grammar can be obtained by calling #getNextWordLabel()
+     *
      * @param grammar (0-31) is the target grammar, or one of the values in #Wordset
      * @return DumpGrammarResult is successful, containing:
-     *  Flags - a variable that holds some grammar flags when the function returns. See #GrammarFlag
-     *  Count - count is a variable that holds the number of words in the grammar when the function returns.
-     *  Null if failed
+     * Flags - a variable that holds some grammar flags when the function returns. See #GrammarFlag
+     * Count - count is a variable that holds the number of words in the grammar when the function returns.
+     * Null if failed
      */
     public DumpGrammarResult DumpGrammar(int grammar) {
+        if (grammar < 0 || grammar > 31) throw new IllegalArgumentException(Integer.toString(grammar));
+
         DumpGrammarResult response = new DumpGrammarResult();
 
         SendCommand(CMD_DUMP_SI);
@@ -288,6 +292,67 @@ public class EasyVRLibrary {
         return decodedValue;
     }
 
+    public DumpMessageResult DumpMessage(byte index) {
+
+        DumpMessageResult response = new DumpMessageResult();
+
+        SendCommand(CMD_DUMP_RP);
+        SendArgument(-1);
+        SendArgument(index);
+
+        char sts = 0;
+        try {
+            sts = GetResponse(STORAGE_TIMEOUT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (sts != STS_MESSAGE) {
+            ReadStatus(sts);
+            return null;
+        }
+
+        // if communication should fail
+        _status.V = 0;
+        _status.Error = true;
+
+        try {
+            response.type = ReceiveArgumentAsInt();
+        } catch (IOException e) {
+          return null;
+        }
+
+        response.length = 0;
+        if (response.type == 0)
+            return response;
+
+        int[] tempArray = new int[7];
+
+        for (int i = 0; i < 6; ++i) {
+            char rx;
+
+            try{
+                rx = ReceiveArgumentAsChar();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+
+            tempArray[i] |= rx & 0x0F;
+
+            try{
+                rx = ReceiveArgumentAsChar();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+            tempArray[i] |= (rx << 4) & 0xF0;
+        }
+
+        _status.V = 0;
+        return response;
+    }
+
     public Boolean PlayPhoneTone(int tone, int duration) {
         SendCommand(CMD_PLAY_DTMF);
         SendArgument(-1);
@@ -329,7 +394,6 @@ public class EasyVRLibrary {
 
                 try {
                     rx = ReceiveArgumentAsChar();
-                    //sp,etjonmg
                     Value = rx;
                 } catch (IOException e) {
                     e.printStackTrace();
