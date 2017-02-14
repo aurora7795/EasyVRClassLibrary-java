@@ -237,7 +237,7 @@ public class EasyVRLibrary {
      * Type: (0,8) is a variable that holds the message format when the function returns(see #MessageType)
      * Length: A variable that holds the message length in bytes when the function returns
      */
-    public DumpMessageResult DumpMessage(byte index) {
+    public DumpMessageResult DumpMessage(int index) {
 
         DumpMessageResult response = new DumpMessageResult();
 
@@ -833,7 +833,7 @@ public class EasyVRLibrary {
      * @param volume volume (0-31) may be one of the values in #SoundVolume
      * @return true if the operation is successful
      */
-    public Boolean PlaySound(short index, int volume)
+    public Boolean PlaySound(int index, int volume)
     {
         if (volume < 0 || volume > 31) throw new IllegalArgumentException(Integer.toString(volume));
 
@@ -854,7 +854,7 @@ public class EasyVRLibrary {
      * @param index index is the index of the target sound in the sound table
      * @param volume (0-31) may be one of the values in #SoundVolume
      */
-    public void PlaySoundAsync(short index, int volume)
+    public void PlaySoundAsync(int index, int volume)
     {
         if (volume < 0 || volume > 31) throw new IllegalArgumentException(Integer.toString(volume));
 
@@ -872,7 +872,7 @@ public class EasyVRLibrary {
      * @param timeout (0-255) is the maximum duration of the function in seconds, 0 means infinite
      * @return true if the operation is successfully started
      */
-    public Boolean RealtimeLipsync(short threshold, byte timeout)
+    public Boolean RealtimeLipsync(int threshold, int timeout)
     {
         if (threshold > 1023) throw new IllegalArgumentException(Integer.toString(threshold));
         if (timeout > 255) throw new IllegalArgumentException(Integer.toString(timeout));
@@ -929,7 +929,7 @@ public class EasyVRLibrary {
      * @param bits bits (8) specifies the audio format (see #MessageType)
      * @param timeout timeout (0-31) is the maximum recording time (0=infinite)
      */
-    public void RecordMessageAsync(byte index, MessageType bits, byte timeout)
+    public void RecordMessageAsync(int index, MessageType bits, int timeout)
     {
         if (index < 0 || index > 31) throw new IllegalArgumentException(Integer.toString(index));
         if (timeout < 0 || timeout > 31) throw new IllegalArgumentException(Integer.toString(timeout));
@@ -1084,7 +1084,7 @@ public class EasyVRLibrary {
      *     10 units in range 10-100 and to 100 units in range 100-1000.
      * @return true if the operation is successful
      */
-    public Boolean SetDelay(short millis)
+    public Boolean SetDelay(int millis)
     {
         if (millis > 1000) throw new IllegalArgumentException(Integer.toString(millis));
 
