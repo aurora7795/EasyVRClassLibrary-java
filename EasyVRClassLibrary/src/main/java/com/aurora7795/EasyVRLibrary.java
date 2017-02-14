@@ -43,18 +43,16 @@ public class EasyVRLibrary {
         }
     }
 
-    private static int ReceiveArgumentAsInt() throws IOException {
-        int response;
+    private static Integer ReceiveArgumentAsInt() {
+        Integer response;
         SendCommand((char) Protocol.ARG_ACK);
         response = ArgumentEncoding.ConvertArgumentCode(GetResponse(DEF_TIMEOUT));
         return response;
     }
 
-    private static char ReceiveArgumentAsChar() throws IOException {
+    private static Character ReceiveArgumentAsChar() {
         char response = ' ';
         SendCommand((char) ARG_ACK);
-
-        //TODO: need some way of handling timeouts
 
         response = GetResponse(DEF_TIMEOUT);
         return response;
@@ -78,11 +76,15 @@ public class EasyVRLibrary {
     }
 
 
-    private static char GetResponse(int timeout) throws IOException {
+    private static Character GetResponse(int timeout)  {
 
         _serialPort.SetTimeout(timeout);
-        char temp;
-        temp = _serialPort.Read();
+        Character temp = null;
+        try {
+            temp = _serialPort.Read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.printf("read off buffer: %s%n", temp);
         return temp;
     }
@@ -103,11 +105,7 @@ public class EasyVRLibrary {
         SendArgument(index);
 
         int rx = 0;
-        try {
-            rx = GetResponse(STORAGE_TIMEOUT);
-        } catch (IOException e) {
-            return false;
-        }
+        rx = GetResponse(STORAGE_TIMEOUT);
         if (rx == STS_SUCCESS)
             return true;
 
@@ -130,12 +128,7 @@ public class EasyVRLibrary {
         SendCommand(CMD_BAUDRATE);
         SendArgument(baudRate.getValue());
 
-        try {
-            return GetResponse(DEF_TIMEOUT) == STS_SUCCESS;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return GetResponse(DEF_TIMEOUT) == STS_SUCCESS;
     }
 
     /**
@@ -153,12 +146,7 @@ public class EasyVRLibrary {
         SendArgument(0);
 
         char rx = 0;
-        try {
-            rx = GetResponse(STORAGE_TIMEOUT);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        rx = GetResponse(STORAGE_TIMEOUT);
         ReadStatus(rx);
         return (_status.V == 0);
     }
@@ -173,13 +161,8 @@ public class EasyVRLibrary {
         for (i = 0; i < 5; ++i) {
             SendCommand(CMD_BREAK);
 
-            try {
-                if (GetResponse(DEF_TIMEOUT) == STS_SUCCESS)
-                    return true;
-            } catch (IOException e) {
-
-                return false;
-            }
+            if (GetResponse(DEF_TIMEOUT) == STS_SUCCESS)
+                return true;
         }
         return false;
     }
@@ -225,30 +208,16 @@ public class EasyVRLibrary {
         SendCommand(CMD_DUMP_SI);
         SendArgument(grammar);
 
-        try {
-            if (GetResponse(DEF_TIMEOUT) != STS_GRAMMAR) {
-                return null;
-            }
-        } catch (IOException e) {
+        if (GetResponse(DEF_TIMEOUT) != STS_GRAMMAR) {
             return null;
         }
 
         char rx;
-        try {
-            rx = ReceiveArgumentAsChar();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
+        rx = ReceiveArgumentAsChar();
 
         response.flags = (byte) (rx == -1 ? 32 : rx);
 
-        try {
-            rx = ReceiveArgumentAsChar();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        rx = ReceiveArgumentAsChar();
 
         response.count = (byte) rx;
         return response;
@@ -258,23 +227,14 @@ public class EasyVRLibrary {
         SendCommand(CMD_RESETALL);
         SendCommand('R');
 
-        try {
-            return GetResponse(5000) == STS_SUCCESS;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return GetResponse(5000) == STS_SUCCESS;
     }
 
     public int GetId() {
         SendCommand(STS_ID);
 
         char response = 0;
-        try {
-            response = GetResponse(DEF_TIMEOUT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        response = GetResponse(DEF_TIMEOUT);
         if (response != STS_ID)
             try {
                 throw new Exception("Invalid response: " + response);
@@ -282,16 +242,22 @@ public class EasyVRLibrary {
                 e.printStackTrace();
             }
 
-        try {
-            response = ReceiveArgumentAsChar();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        response = ReceiveArgumentAsChar();
 
         int decodedValue = ArgumentEncoding.ConvertArgumentCode(response);
         return decodedValue;
     }
 
+    /**
+     * Retrieves the type and length of a recorded message
+     *
+     * The specified message may have errors. Use #getError() when the function fails, to know the reason of the
+     * failure.
+     * @param index (0-31) is the index of the target message slot
+     * @return DumpMessageResult which contains:
+     * Type: (0,8) is a variable that holds the message format when the function returns(see #MessageType)
+     * Length: A variable that holds the message length in bytes when the function returns
+     */
     public DumpMessageResult DumpMessage(byte index) {
 
         DumpMessageResult response = new DumpMessageResult();
@@ -301,11 +267,7 @@ public class EasyVRLibrary {
         SendArgument(index);
 
         char sts = 0;
-        try {
-            sts = GetResponse(STORAGE_TIMEOUT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        sts = GetResponse(STORAGE_TIMEOUT);
         if (sts != STS_MESSAGE) {
             ReadStatus(sts);
             return null;
@@ -315,11 +277,7 @@ public class EasyVRLibrary {
         _status.V = 0;
         _status.Error = true;
 
-        try {
-            response.type = ReceiveArgumentAsInt();
-        } catch (IOException e) {
-          return null;
-        }
+        response.type = ReceiveArgumentAsInt();
 
         response.length = 0;
         if (response.type == 0)
@@ -330,22 +288,12 @@ public class EasyVRLibrary {
         for (int i = 0; i < 6; ++i) {
             char rx;
 
-            try{
-                rx = ReceiveArgumentAsChar();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
+            rx = ReceiveArgumentAsChar();
 
 
             tempArray[i] |= rx & 0x0F;
 
-            try{
-                rx = ReceiveArgumentAsChar();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
+            rx = ReceiveArgumentAsChar();
             tempArray[i] |= (rx << 4) & 0xF0;
         }
 
@@ -359,15 +307,148 @@ public class EasyVRLibrary {
         SendArgument(tone);
         SendArgument(duration);
 
-        try {
-            char response;
-            response = GetResponse(5000);
-            return response == STS_SUCCESS;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+        char response;
+        response = GetResponse(5000);
+        return response == STS_SUCCESS;
+
+    }
+
+
+    /**
+     * Retrieves the name of the sound table and the number of sounds it contains
+     * @return DumpSoundResult, which contains:
+     * Name: points to an array of at least 32 characters that holds the sound table label when the function
+     *       returns
+     * Count: A variable that holds the number of sounds when the function returns
+     * NULL if failed
+     */
+    public DumpSoundTableResult DumpSoundTable()
+    {
+        DumpSoundTableResult response = new DumpSoundTableResult();
+
+        SendCommand(CMD_DUMP_SX);
+
+        if (GetResponse() != STS_TABLE_SX)
+        {
+            return null;
         }
 
+        Integer rx = null;
+        rx = ReceiveArgumentAsInt();
+        if (rx == null)
+        {
+            return null;
+        }
+        response.count = rx << 5;
+        rx = ReceiveArgumentAsInt();
+        if (rx == null)
+        {
+            return null;
+        }
+        response.count |= rx;
+
+        rx= ReceiveArgumentAsInt();
+        if (rx == null)
+        {
+            return null;
+        }
+        int length = rx;
+
+        StringBuilder tempString = new StringBuilder();
+
+        for (int i = 0; i < length; ++i)
+        {
+            Character rxChar;
+            rxChar = ReceiveArgumentAsChar();
+            if (rx==null)
+            {
+                return null;
+            }
+            if (rx == '^')
+            {
+                rxChar = ReceiveArgumentAsChar();
+                if (rxChar == null)
+                {
+                    return null;
+                }
+                tempString.append(ArgumentEncoding.ConvertArgumentCode(rxChar));
+                --length;
+            }
+            else
+            {
+                tempString.append(rxChar);
+            }
+
+        }
+        return response;
+    }
+
+    /**
+     * Schedules playback of a SonicNet token after the next sound starts playing.
+     *
+     * The scheduled token remains valid for one operation only, so you have to call #playSound() or
+     * #playSoundAsync() immediately after this function.
+     * @param bits bits (4 or 8) specifies the length of transmitted token
+     * @param token token is the index of the SonicNet token to play (0-255 for 8-bit tokens or 0-15 for 4-bit tokens)
+     * @param delay delay (1-28090) is the time in milliseconds at which to send the token, since the beginning of the
+     *        next sound playback
+     * @return true if the operation is successful
+     */
+    public Boolean EmbedToken(int bits, int token, int delay)
+    {
+        SendCommand(CMD_SEND_SN);
+        SendArgument(bits);
+        SendArgument((token >> 5) & 0x1F);
+        SendArgument(token & 0x1F);
+        delay = (delay * 2 + 27) / 55; // approx / 27.46 - err < 0.15%
+        if (delay == 0) // must be > 0 to embed in some audio
+            delay = 1;
+        SendArgument((delay >> 5) & 0x1F);
+        SendArgument(delay & 0x1F);
+
+        return GetResponse() == STS_SUCCESS;
+    }
+
+    public Boolean SetCommandLabel(int group, int index, String name)
+    {
+        SendCommand(CMD_NAME_SD);
+        SendArgument(group);
+        SendArgument(index);
+
+        // numeric characters in the label string must be prefixed with a '^' - this increases the overall length of the
+        // name and needs to be taken into account when determining how many characters will be sent to the Easy VR module
+
+        int escapedCharsNeeded = 0;
+        for(char c: name.toCharArray()) {
+            if(Character.isDigit(c)) {
+                escapedCharsNeeded++;
+            }
+        }
+
+        SendArgument(name.length() + escapedCharsNeeded);
+
+        for (char c: name.toCharArray()) {
+
+            if (Character.isDigit(c))
+            {
+                SendCharacter('^');
+                SendArgument(c - '0');
+            }
+            else if (Character.isLetter(c))
+            {
+                SendCharacter((char)(c & ~0x20)); // to uppercase
+            }
+            else
+            {
+                SendCharacter('_');
+            }
+        }
+
+        return GetResponse(STORAGE_TIMEOUT) == STS_SUCCESS;
+    }
+
+    private char GetResponse() {
+        return GetResponse(DEF_TIMEOUT);
     }
 
     private void ReadStatus(char rx) {
@@ -380,43 +461,27 @@ public class EasyVRLibrary {
 
             case STS_SIMILAR:
 
-                try {
-                    _status.Builtin = true;
-                    rx = ReceiveArgumentAsChar();
-                    Value = rx;
-                    return;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                _status.Builtin = true;
+                rx = ReceiveArgumentAsChar();
+                Value = rx;
+                return;
 
             case STS_RESULT:
                 _status.Command = true;
 
-                try {
-                    rx = ReceiveArgumentAsChar();
-                    Value = rx;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                rx = ReceiveArgumentAsChar();
+                Value = rx;
 
                 return;
 
             case STS_TOKEN:
                 _status.Token = true;
 
-                try {
-                    rx = ReceiveArgumentAsChar();
-                    Value = rx << 5;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                rx = ReceiveArgumentAsChar();
+                Value = rx << 5;
 
-                try {
-                    rx = ReceiveArgumentAsChar();
-                    Value |= rx;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                rx = ReceiveArgumentAsChar();
+                Value |= rx;
 
                 return;
 
@@ -435,19 +500,11 @@ public class EasyVRLibrary {
             case STS_ERROR:
                 _status.Error = true;
 
-                try {
-                    rx = ReceiveArgumentAsChar();
-                    Value = rx << 4;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                rx = ReceiveArgumentAsChar();
+                Value = rx << 4;
 
-                try {
-                    rx = ReceiveArgumentAsChar();
-                    Value |= rx;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                rx = ReceiveArgumentAsChar();
+                Value |= rx;
 
                 return;
         }

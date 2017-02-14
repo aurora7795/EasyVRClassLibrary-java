@@ -11,8 +11,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.github.purejavacomm:purejavacomm:1.0.1.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: net.java.dev.jna:jna:4.2.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: com.neuronrobotics:nrjavaserial:3.7.5.1" level="project" />
     <orderEntry type="module" module-name="EasyVRClassLibrary" />

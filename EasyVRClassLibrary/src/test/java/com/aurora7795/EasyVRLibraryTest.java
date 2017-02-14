@@ -5,11 +5,16 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 import junit.framework.TestCase;
 import com.aurora7795.EasyVRLibrary.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
 /**
  * Created by Martin Bradford Gago on 10/02/2017.
  */
 public class EasyVRLibraryTest extends TestCase {
 
+    @Test
     public void testDumpMessage() throws Exception {
         //Arrange
         EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
@@ -37,8 +42,8 @@ public class EasyVRLibraryTest extends TestCase {
 
     }
 
-    // private String comPort = "/dev/tty.usbserial-fd1";
-    private String comPort = "COM3";
+     private String comPort = "/dev/tty.usbserial-fd1";
+   // private String comPort = "COM3";
     private int baudRate = 9600;
 
     public void testChangeBaudrate() throws Exception {
