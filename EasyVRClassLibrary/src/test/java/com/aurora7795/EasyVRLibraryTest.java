@@ -1,12 +1,8 @@
 package com.aurora7795;
 
+import com.aurora7795.EasyVRLibrary.DumpGrammarResult;
 import com.aurora7795.Protocol.Baudrate;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import junit.framework.TestCase;
-import com.aurora7795.EasyVRLibrary.*;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
 
 /**

@@ -78,12 +78,22 @@ public class Protocol {
      */
 
     public enum Language {
-        ENGLISH, //*< Uses the US English word sets
-        ITALIAN, //*< Uses the Italian word sets
-        JAPANESE, //*< Uses the Japanese word sets
-        GERMAN, //*< Uses the German word sets
-        SPANISH, //*< Uses the Spanish word sets
-        FRENCH, //*< Uses the French word sets
+        ENGLISH(0), //*< Uses the US English word sets
+        ITALIAN(1), //*< Uses the Italian word sets
+        JAPANESE(2), //*< Uses the Japanese word sets
+        GERMAN(3), //*< Uses the German word sets
+        SPANISH(4), //*< Uses the Spanish word sets
+        FRENCH(5); //*< Uses the French word sets
+
+        private int value;
+
+        Language(int i) {
+            this.value = i;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 
     /**
@@ -144,11 +154,21 @@ public class Protocol {
      */
 
     public enum Knob {
-        LOOSER, //*< Lowest threshold, most results reported
-        LOOSE, //*< Lower threshold, more results reported
-        TYPICAL, //*< Typical threshold (default)
-        STRICT, //*< Higher threshold, fewer results reported
-        STRICTER, //*< Highest threshold, fewest results reported
+        LOOSER(0), //*< Lowest threshold, most results reported
+        LOOSE(1), //*< Lower threshold, more results reported
+        TYPICAL(2), //*< Typical threshold (default)
+        STRICT(3), //*< Higher threshold, fewer results reported
+        STRICTER(4); //*< Highest threshold, fewest results reported
+
+        private int value;
+
+        Knob(int i) {
+            this.value = i;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 
     /**
@@ -211,8 +231,18 @@ public class Protocol {
      */
 
     public enum CommandLatency {
-        MODE_NORMAL, //*< Normal settings (default), higher latency
-        MODE_FAST, //*< Fast settings, better response time
+        MODE_NORMAL(0), //*< Normal settings (default), higher latency
+        MODE_FAST(1);   //*< Fast settings, better response time
+
+        private int value;
+
+        CommandLatency(int i) {
+            this.value = i;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 
     /**
