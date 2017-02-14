@@ -5,6 +5,8 @@ import com.aurora7795.Protocol.*;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -21,9 +23,7 @@ public class EasyVRLibraryTest extends TestCase {
         //Arrange
         EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
         //Act
-        assertThrows(IllegalArgumentException.class, () -> {
-            Boolean response = tempVr.AddCommand(17, 12);
-        });
+        assertThrows(IllegalArgumentException.class, () -> tempVr.AddCommand(17, 12));
     }
 
     @Test
@@ -31,9 +31,7 @@ public class EasyVRLibraryTest extends TestCase {
         //Arrange
         EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
         //Act
-        assertThrows(IllegalArgumentException.class, () -> {
-            Boolean response = tempVr.AddCommand(17, 45);
-        });
+        assertThrows(IllegalArgumentException.class, () -> tempVr.AddCommand(17, 45));
     }
 
     @Test
@@ -64,9 +62,7 @@ public class EasyVRLibraryTest extends TestCase {
         //Arrange
         EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
         //Act
-        assertThrows(IllegalArgumentException.class, () -> {
-            tempVr.EraseCommand(17, 12);
-        });
+        assertThrows(IllegalArgumentException.class, () -> tempVr.EraseCommand(17, 12));
 
     }
 
@@ -75,9 +71,7 @@ public class EasyVRLibraryTest extends TestCase {
         //Arrange
         EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
         //Act
-        assertThrows(IllegalArgumentException.class, () -> {
-            tempVr.EraseCommand(2, 45);
-        });
+        assertThrows(IllegalArgumentException.class, () -> tempVr.EraseCommand(2, 45));
     }
 
     @Test
@@ -99,9 +93,7 @@ public class EasyVRLibraryTest extends TestCase {
         //Arrange
         EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
         //Act
-        assertThrows(IllegalArgumentException.class, () -> {
-            tempVr.GetCommandCount(17);
-        });
+        assertThrows(IllegalArgumentException.class, () -> tempVr.GetCommandCount(17));
     }
 
     @Test
@@ -139,9 +131,7 @@ public class EasyVRLibraryTest extends TestCase {
         //Arrange
         EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
         //Act
-        assertThrows(IllegalArgumentException.class, () -> {
-            tempVr.PlaySound(1, 345);
-        });
+        assertThrows(IllegalArgumentException.class, () -> tempVr.PlaySound(1, 345));
     }
 
     @Test
@@ -169,9 +159,7 @@ public class EasyVRLibraryTest extends TestCase {
         //Arrange
         EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
         //Act
-        assertThrows(IllegalArgumentException.class, () -> {
-            tempVr.RemoveCommand(17, 12);
-        });
+        assertThrows(IllegalArgumentException.class, () -> tempVr.RemoveCommand(17, 12));
     }
 
     @Test
@@ -179,9 +167,7 @@ public class EasyVRLibraryTest extends TestCase {
         //Arrange
         EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
         //Act
-        assertThrows(IllegalArgumentException.class, () -> {
-            tempVr.RemoveCommand(2, 45);
-        });
+        assertThrows(IllegalArgumentException.class, () -> tempVr.RemoveCommand(2, 45));
     }
 
     @Test
@@ -222,9 +208,7 @@ public class EasyVRLibraryTest extends TestCase {
         //Arrange
         EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
         //Act
-        assertThrows(IllegalArgumentException.class, () -> {
-            tempVr.SetDelay(2000);
-        });
+        assertThrows(IllegalArgumentException.class, () -> tempVr.SetDelay(2000));
     }
 
     @Test
@@ -312,9 +296,7 @@ public class EasyVRLibraryTest extends TestCase {
         //Arrange
         EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
         //Act
-        assertThrows(IllegalArgumentException.class, () -> {
-            Boolean response = tempVr.SetTimeout(60);
-        });
+        assertThrows(IllegalArgumentException.class, () -> tempVr.SetTimeout(60));
 
     }
 
@@ -440,7 +422,7 @@ public class EasyVRLibraryTest extends TestCase {
         DumpCommandResult response = tempVr.DumpCommand(1, 0);
 
         assertTrue(response != null);
-        assertTrue(response.name == "TESTING123");
+        assertTrue(Objects.equals(response.name, "TESTING123"));
         assertTrue(response.training == 2);
     }
 
@@ -458,7 +440,7 @@ public class EasyVRLibraryTest extends TestCase {
         DumpCommandResult CommandResponse = tempVr.DumpCommand(0, 0);
 
         assertTrue(CommandResponse != null);
-        assertTrue(CommandResponse.name == "TESTCOM1");
+        assertTrue(Objects.equals(CommandResponse.name, "TESTCOM1"));
         assertTrue(CommandResponse.training == 0);
     }
 
@@ -470,7 +452,7 @@ public class EasyVRLibraryTest extends TestCase {
         DumpSoundTableResult STresponse = tempVr.DumpSoundTable();
 
         assertTrue(STresponse != null);
-        assertTrue(STresponse.name == "SND_BEEP");
+        assertTrue(Objects.equals(STresponse.name, "SND_BEEP"));
         assertTrue(STresponse.count == 1);
     }
 
@@ -489,8 +471,6 @@ public class EasyVRLibraryTest extends TestCase {
         //Arrange
         EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
 
-        byte flags;
-        int count;
         DumpGrammarResult response = tempVr.DumpGrammar(0);
         assertTrue(response != null);
 
@@ -499,7 +479,7 @@ public class EasyVRLibraryTest extends TestCase {
 
         //Assert
         assertTrue(response != null);
-        assertTrue(name == "ROBOT");
+        assertTrue(Objects.equals(name, "ROBOT"));
 
     }
 
