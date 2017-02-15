@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/EasyVRClassLibrary/EasyVRClassLibrary.iml" filepath="$PROJECT_DIR$/EasyVRClassLibrary/EasyVRClassLibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/EasyVRClassLibrary-parent.iml" filepath="$PROJECT_DIR$/EasyVRClassLibrary-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/TerminalEmulator/TerminalEmulator.iml" filepath="$PROJECT_DIR$/TerminalEmulator/TerminalEmulator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sampleApp/sampleApp.iml" filepath="$PROJECT_DIR$/sampleApp/sampleApp.iml" />
     </modules>
   </component>
 </project>

@@ -22,7 +22,7 @@ public class App extends Application {
 
         fxmlLoader = new FXMLLoader();
 
-        URL location = getClass().getResource("/fxml/sample.fxml");
+        URL location = getClass().getResource("/fxml/terminalEmulator.fxml");
         fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(location);
         fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
