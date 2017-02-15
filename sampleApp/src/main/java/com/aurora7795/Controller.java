@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.Set;
 
 public class Controller {
-    public TextArea responseTB;
-    public Button sendBtn;
-    public TextArea requestTB;
     public ChoiceBox<String> portListBox;
     public Button ConnectBtn;
-    public Button readBtn;
+    public TextArea responseTB;
+    public Button getIdBtn;
+    public Button sendPhoneToneBtn;
+    public Button startRecognitionBtn;
 
     purejavacommWrapper serialPort;
 
@@ -33,29 +33,15 @@ public class Controller {
         shouldBeDisabled = new SimpleBooleanProperty(true);
 
         List<String> availableSerialPorts = purejavacommWrapper.getAvailableSerialPorts();
-//        String[] tempList = new String[availableSerialPorts.Size()];
-//        availableSerialPorts.toArray(tempList);
         ObservableList<String> portList = FXCollections.observableArrayList(availableSerialPorts);
         portListBox.setItems(portList);
 
-        sendBtn.disableProperty().bind(shouldBeDisabled);
+        getIdBtn.disableProperty().bind(shouldBeDisabled);
+        sendPhoneToneBtn.disableProperty().bind(shouldBeDisabled);
+        startRecognitionBtn.disableProperty().bind(shouldBeDisabled);
     }
 
-    public void submit(ActionEvent actionEvent) {
 
-        try {
-            serialPort.Write(requestTB.getText());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            responseTB.appendText(String.format("%s%s", serialPort.Read(), System.getProperty("line.separator")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public void connectBtnClick(ActionEvent actionEvent) {
 
@@ -66,11 +52,5 @@ public class Controller {
         shouldBeDisabled.setValue(false);
     }
 
-    public void readClick(ActionEvent actionEvent) {
-        try {
-            responseTB.appendText(String.format("%s%s", serialPort.Read(), System.getProperty("line.separator")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 }
