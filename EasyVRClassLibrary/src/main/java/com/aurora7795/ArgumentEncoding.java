@@ -4,7 +4,7 @@ import static com.aurora7795.ArgumentCode.*;
 
 public class ArgumentEncoding {
     public static int ConvertArgumentCode(char argumentCode) {
-        ArgumentCode tempChar = values()[argumentCode];
+        ArgumentCode tempChar = getArgumentCodeForChar(argumentCode);
 
         switch (tempChar) {
             case ArgNegOne:

@@ -46,6 +46,15 @@ public enum ArgumentCode {
         this.value = b;
     }
 
+    public static ArgumentCode getArgumentCodeForChar(final char argumentChar)
+    {
+        for (ArgumentCode type : ArgumentCode.values())
+            if (type.value == argumentChar)
+                return type;
+
+        return null;
+    }
+
     public char getValue() {
         return value;
     }
