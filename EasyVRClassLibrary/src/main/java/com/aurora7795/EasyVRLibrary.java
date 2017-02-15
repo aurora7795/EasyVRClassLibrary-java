@@ -8,11 +8,11 @@ import static com.aurora7795.Protocol.*;
  * Hello world!
  */
 public class EasyVRLibrary {
+
     public static int EASYVR_RX_TIMEOUT = 500;
     public static int EASYVR_STORAGE_TIMEOUT = 500;
     public static int DEF_TIMEOUT = EASYVR_RX_TIMEOUT;
     public static int STORAGE_TIMEOUT = EASYVR_STORAGE_TIMEOUT;
-    static ISerialPortWrapper _serialPort;
     public int EASYVR_WAKE_TIMEOUT = 200;
     public int EASYVR_PLAY_TIMEOUT = 5000;
     public int EASYVR_TOKEN_TIMEOUT = 1500;
@@ -21,6 +21,8 @@ public class EasyVRLibrary {
     protected byte Id;
     private int Value;
     private Status _status = new Status();
+
+    static ISerialPortWrapper _serialPort;
 
     public EasyVRLibrary(String portName, int baudRate) {
         if (_serialPort != null) return;
@@ -94,6 +96,7 @@ public class EasyVRLibrary {
      * @param index (0-31) is the index of the command within the selected group
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean AddCommand(int group, int index) {
         if (group < 0 || group > 16) throw new IllegalArgumentException(Integer.toString(group));
         if (index < 0 || index > 31) throw new IllegalArgumentException(Integer.toString(index));
@@ -122,6 +125,7 @@ public class EasyVRLibrary {
      * @param baudRate one of values in #Baudrate
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean ChangeBaudrate(Baudrate baudRate) {
         SendCommand(CMD_BAUDRATE);
         SendArgument(baudRate.getValue());
@@ -138,6 +142,7 @@ public class EasyVRLibrary {
      *
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean CheckMessages() {
         SendCommand(CMD_VERIFY_RP);
         SendArgument(-1);
@@ -154,6 +159,7 @@ public class EasyVRLibrary {
      *
      * @return true if a compatible module has been found
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean Detect() {
         int i;
         for (i = 0; i < 5; ++i) {
@@ -177,6 +183,7 @@ public class EasyVRLibrary {
      * @param timeout   (1-28090) is the maximum time in milliseconds to keep listening for a valid token or(0)
      *                  to listen without time limits.
      */
+    @SuppressWarnings("WeakerAccess")
     public void DetectToken(BitNumber bits, RejectionLevel rejection, int timeout) {
         SendCommand(CMD_RECV_SN);
         SendArgument(bits.getValue());
@@ -198,6 +205,7 @@ public class EasyVRLibrary {
      * Count - count is a variable that holds the number of words in the grammar when the function returns.
      * Null if failed
      */
+    @SuppressWarnings("WeakerAccess")
     public DumpGrammarResult DumpGrammar(int grammar) {
         if (grammar < 0 || grammar > 31) throw new IllegalArgumentException(Integer.toString(grammar));
 
@@ -232,6 +240,7 @@ public class EasyVRLibrary {
      * Type: (0,8) is a variable that holds the message format when the function returns(see #MessageType)
      * Length: A variable that holds the message length in bytes when the function returns
      */
+    @SuppressWarnings("WeakerAccess")
     public DumpMessageResult DumpMessage(int index) {
 
         DumpMessageResult response = new DumpMessageResult();
@@ -284,6 +293,7 @@ public class EasyVRLibrary {
      * Count: A variable that holds the number of sounds when the function returns
      * NULL if failed
      */
+    @SuppressWarnings("WeakerAccess")
     public DumpSoundTableResult DumpSoundTable() {
         DumpSoundTableResult response = new DumpSoundTableResult();
 
@@ -346,6 +356,7 @@ public class EasyVRLibrary {
      *              next sound playback
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean EmbedToken(int bits, int token, int delay) {
         SendCommand(CMD_SEND_SN);
         SendArgument(bits);
@@ -368,6 +379,7 @@ public class EasyVRLibrary {
      * @param name  name is a string containing the label to be assigned to the specified command
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean SetCommandLabel(int group, int index, String name) {
         SendCommand(CMD_NAME_SD);
         SendArgument(group);
@@ -407,6 +419,7 @@ public class EasyVRLibrary {
      * @param index (0-31) is the index of the command within the selected group
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean EraseCommand(int group, int index) {
         if (group < 0 || group > 16) throw new IllegalArgumentException(Integer.toString(group));
         if (index < 0 || index > 31) throw new IllegalArgumentException(Integer.toString(index));
@@ -436,6 +449,7 @@ public class EasyVRLibrary {
      * data: points to an array of at least 258 bytes that holds the command raw data
      * null if method fails.
      */
+    @SuppressWarnings("WeakerAccess")
     public ExportCommandResult ExportCommand(byte group, byte index) {
         ExportCommandResult response = new ExportCommandResult();
 
@@ -469,6 +483,7 @@ public class EasyVRLibrary {
     /// </summary>
     /// <param name="value">(0-31) is filled in with the current mouth opening position</param>
     /// <returns>true if the operation is successful, false if lip-sync has finished</returns>
+    @SuppressWarnings("WeakerAccess")
     public Integer FetchMouthPosition() {
         int value;
         SendCharacter(' ');
@@ -494,6 +509,7 @@ public class EasyVRLibrary {
      * @param wait specifies whether to wait until the operation is complete (or times out)
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean FixMessages(Boolean wait) {
         SendCommand(CMD_VERIFY_RP);
         SendArgument(-1);
@@ -517,6 +533,7 @@ public class EasyVRLibrary {
      * @return (0-31) is the command index if recognition is successful, (-1) if no command has been recognized or an error
      * occurred
      */
+    @SuppressWarnings("WeakerAccess")
     public int GetCommand() {
         if (_status.Command) return ArgumentEncoding.ConvertArgumentCode((char) Value);
         return -1;
@@ -528,6 +545,7 @@ public class EasyVRLibrary {
      * @param group (0-16) is the target group, or one of the values in #Groups
      * @return integer is the count of commands (negative in case of errors)
      */
+    @SuppressWarnings("WeakerAccess")
     public int GetCommandCount(int group) {
         if (group < 0 || group > 16) throw new IllegalArgumentException(Integer.toString(group));
 
@@ -546,6 +564,7 @@ public class EasyVRLibrary {
      *
      * @return (0-255) is the error code, (-1) if no error occurred
      */
+    @SuppressWarnings("WeakerAccess")
     public short GetError() {
         if (_status.Error) return (short) Value;
         return -1;
@@ -567,6 +586,7 @@ public class EasyVRLibrary {
      * <p>
      * null if failed.
      */
+    @SuppressWarnings("WeakerAccess")
     public DumpCommandResult DumpCommand(int group, int index) {
         DumpCommandResult response = new DumpCommandResult();
 
@@ -631,6 +651,7 @@ public class EasyVRLibrary {
      *
      * @return integer is the count of grammars (negative in case of errors)
      */
+    @SuppressWarnings("WeakerAccess")
     public int GetGrammarsCount() {
         SendCommand(CMD_DUMP_SI);
         SendArgument(-1);
@@ -647,6 +668,7 @@ public class EasyVRLibrary {
      *
      * @return Module ID for the easy VR module
      */
+    @SuppressWarnings("WeakerAccess")
     public ModuleId GetId() {
         SendCommand(STS_ID);
 
@@ -671,6 +693,7 @@ public class EasyVRLibrary {
      * @return integer is the index of the received SonicNet token (0-255 for 8-bit tokens or 0-15 for 4-bit tokens)
      * if detection was successful, (-1) if no token has been received or an error occurred
      */
+    @SuppressWarnings("WeakerAccess")
     public int GetToken() {
         if (_status.Token) return ArgumentEncoding.ConvertArgumentCode((char) Value);
         return -1;
@@ -682,6 +705,7 @@ public class EasyVRLibrary {
      * @return (0-31) is the command index if recognition is successful, (-1) if no built-in word has been recognized or an
      * error occurred
      */
+    @SuppressWarnings("WeakerAccess")
     public int GetWord() {
         if (_status.Builtin) return ArgumentEncoding.ConvertArgumentCode((char) Value);
         return -1;
@@ -692,6 +716,7 @@ public class EasyVRLibrary {
      *
      * @return true if the operation has completed
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean HasFinished() {
         char rx = GetResponse(NO_TIMEOUT);
         if (rx < 0)
@@ -710,6 +735,7 @@ public class EasyVRLibrary {
      * @param data  points to an array of at least 258 bytes that holds the command raw data
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean ImportCommand(int group, int index, byte[] data) {
         if (group < 0 || group > 16) throw new IllegalArgumentException(Integer.toString(group));
         if (index < 0 || index > 31) throw new IllegalArgumentException(Integer.toString(index));
@@ -732,6 +758,7 @@ public class EasyVRLibrary {
      *
      * @return true if the module has been awakened from sleep mode
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean IsAwakened() {
         return _status.Awakened;
     }
@@ -742,6 +769,7 @@ public class EasyVRLibrary {
      * @return true is a conflict occurred during training. To know what caused the conflict, use #getCommand() and
      * #getWord() (only valid for triggers)
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean IsConflict() {
         return _status.Conflict;
     }
@@ -751,6 +779,7 @@ public class EasyVRLibrary {
      *
      * @return true if an invalid sequence has been detected in the communication protocol
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean IsInvalid() {
         return _status.Invalid;
     }
@@ -761,6 +790,7 @@ public class EasyVRLibrary {
      * @return true if a command could not be added because of memory size constaints(up to 32 custom commands can be
      * created)
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean IsMemoryFull() {
         return _status.Memfull;
     }
@@ -770,6 +800,7 @@ public class EasyVRLibrary {
      *
      * @return true if a timeout occurred
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean IsTimeout() {
         return _status.Timeout;
     }
@@ -784,6 +815,7 @@ public class EasyVRLibrary {
      * @param speed       (0-1) may be one of the values in #MessageSpeed
      * @param attenuation (0-3) may be one of the values in #MessageAttenuation
      */
+    @SuppressWarnings("WeakerAccess")
     public void PlayMessageAsync(int index, MessageSpeed speed, MessageAttenuation attenuation) {
         SendCommand(CMD_PLAY_RP);
         SendArgument(-1);
@@ -800,6 +832,7 @@ public class EasyVRLibrary {
      * @param duration (1-32) is the tone duration in 40 milliseconds units, or  in seconds for the dial tone
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean PlayPhoneTone(int tone, int duration) {
         if (tone < -1 || tone > 15) throw new IllegalArgumentException(Integer.toString(tone));
         if (duration < 1 || duration > 32) throw new IllegalArgumentException(Integer.toString(duration));
@@ -823,6 +856,7 @@ public class EasyVRLibrary {
      * @param volume volume (0-31) may be one of the values in #SoundVolume
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean PlaySound(int index, int volume) {
         if (volume < 0 || volume > 31) throw new IllegalArgumentException(Integer.toString(volume));
 
@@ -843,6 +877,7 @@ public class EasyVRLibrary {
      * @param index  index is the index of the target sound in the sound table
      * @param volume (0-31) may be one of the values in #SoundVolume
      */
+    @SuppressWarnings("WeakerAccess")
     public void PlaySoundAsync(int index, int volume) {
         if (volume < 0 || volume > 31) throw new IllegalArgumentException(Integer.toString(volume));
 
@@ -861,6 +896,7 @@ public class EasyVRLibrary {
      * @param timeout   (0-255) is the maximum duration of the function in seconds, 0 means infinite
      * @return true if the operation is successfully started
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean RealtimeLipsync(int threshold, int timeout) {
         if (threshold > 1023) throw new IllegalArgumentException(Integer.toString(threshold));
         if (timeout > 255) throw new IllegalArgumentException(Integer.toString(timeout));
@@ -885,6 +921,7 @@ public class EasyVRLibrary {
      *
      * @param group (0-16) is the target group, or one of the values in #Groups
      */
+    @SuppressWarnings("WeakerAccess")
     public void RecognizeCommand(int group) {
         if (group < 0 || group > 16) throw new IllegalArgumentException(Integer.toString(group));
 
@@ -900,6 +937,7 @@ public class EasyVRLibrary {
      * @param wordset (0-3) is the target word set, or one of the values in #Wordset, (4-31) is the target custom
      *                grammar, if present
      */
+    @SuppressWarnings("WeakerAccess")
     public void RecognizeWord(int wordset) {
         if (wordset < 0 || wordset > 31) throw new IllegalArgumentException(Integer.toString(wordset));
 
@@ -917,6 +955,7 @@ public class EasyVRLibrary {
      * @param bits    bits (8) specifies the audio format (see #MessageType)
      * @param timeout timeout (0-31) is the maximum recording time (0=infinite)
      */
+    @SuppressWarnings("WeakerAccess")
     public void RecordMessageAsync(int index, MessageType bits, int timeout) {
         if (index < 0 || index > 31) throw new IllegalArgumentException(Integer.toString(index));
         if (timeout < 0 || timeout > 31) throw new IllegalArgumentException(Integer.toString(timeout));
@@ -935,6 +974,7 @@ public class EasyVRLibrary {
      * @param index (0-31) is the index of the command within the selected group
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean RemoveCommand(int group, int index) {
         if (group < 0 || group > 16) throw new IllegalArgumentException(Integer.toString(group));
         if (index < 0 || index > 31) throw new IllegalArgumentException(Integer.toString(index));
@@ -955,6 +995,7 @@ public class EasyVRLibrary {
      *
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean ResetAll() {
         SendCommand(CMD_RESETALL);
         SendCommand('R');
@@ -972,6 +1013,7 @@ public class EasyVRLibrary {
      * @param wait specifies whether to wait until the operation is complete (or times out)
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean ResetCommands(Boolean wait) {
         SendCommand(CMD_RESETALL);
         SendArgument('D');
@@ -989,6 +1031,7 @@ public class EasyVRLibrary {
      * @param wait specifies whether to wait until the operation is complete (or times out)
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean ResetMessages(Boolean wait) {
         SendCommand(CMD_RESETALL);
         SendArgument('M');
@@ -1003,6 +1046,7 @@ public class EasyVRLibrary {
      * @param token token is the index of the SonicNet token to play (0-255 for 8-bit tokens or 0-15 for 4-bit tokens)
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean SendToken(BitNumber bits, byte token) {
         SendCommand(CMD_SEND_SN);
         SendArgument(bits.getValue());
@@ -1025,7 +1069,7 @@ public class EasyVRLibrary {
     ///     The module is busy until playback completes and it cannot accept other commands.You can interrupt playback
     ///     with #stop().
     /// </remarks>
-
+    @SuppressWarnings("WeakerAccess")
     public void SendTokenAsync(BitNumber bits, byte token) {
         switch (bits) {
             case BITS_4:
@@ -1052,6 +1096,7 @@ public class EasyVRLibrary {
      * @param mode (0-1) is one of the values in #CommandLatency
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean SetCommandLatency(CommandLatency mode) {
         SendCommand(CMD_FAST_SD);
         SendArgument(-1);
@@ -1067,6 +1112,7 @@ public class EasyVRLibrary {
      *               10 units in range 10-100 and to 100 units in range 100-1000.
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean SetDelay(int millis) {
         if (millis > 1000) throw new IllegalArgumentException(Integer.toString(millis));
 
@@ -1089,6 +1135,7 @@ public class EasyVRLibrary {
      * @param knob (0-4) is one of values in #Knob
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean SetKnob(Knob knob) {
         SendCommand(CMD_KNOB);
         SendArgument(knob.getValue());
@@ -1102,6 +1149,7 @@ public class EasyVRLibrary {
      * @param lang (0-5) is one of values in #Language
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean SetLanguage(Language lang) {
         SendCommand(CMD_LANGUAGE);
         SendArgument(lang.getValue());
@@ -1115,6 +1163,7 @@ public class EasyVRLibrary {
      * @param level level (1-5) is one of values in #Level
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean SetLevel(Level level) {
         SendCommand(CMD_LEVEL);
         SendArgument(level.getValue());
@@ -1130,6 +1179,7 @@ public class EasyVRLibrary {
      * @param distance dist (1-3) is one of values in #Distance
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean SetMicDistance(Distance distance) {
         SendCommand(CMD_MIC_DIST);
         SendArgument(-1);
@@ -1145,6 +1195,7 @@ public class EasyVRLibrary {
      * @param config (2-4) is one of the input values in #PinConfig
      * @return integer is the logical value of the pin
      */
+    @SuppressWarnings("WeakerAccess")
     public int SetPinInput(PinNumber pin, PinConfig config) {
         if (config == PinConfig.INPUT_HIZ || config == PinConfig.INPUT_STRONG)
             throw new IllegalArgumentException("Invalid Pin Configuration");
@@ -1165,6 +1216,7 @@ public class EasyVRLibrary {
      * @param value (0-1) is one of the output values in #PinConfig, or Arduino style HIGH and LOW macros
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean SetPinOutput(PinNumber pin, PinConfig value) {
         if (pin.getValue() > 3)
             throw new IllegalArgumentException("Invalid Pin number");
@@ -1185,6 +1237,7 @@ public class EasyVRLibrary {
      * @param seconds (0-31) is the maximum time the module keep listening
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean SetTimeout(int seconds) {
         if (seconds < 0 || seconds > 31) throw new IllegalArgumentException(Integer.toString(seconds));
         SendCommand(CMD_TIMEOUT);
@@ -1199,6 +1252,7 @@ public class EasyVRLibrary {
      * @param duration (0-31) is the silence duration as defined in #TrailingSilence
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean SetTrailingSilence(TrailingSilence duration) {
         SendCommand(CMD_TRAILING);
         SendArgument(-1);
@@ -1214,6 +1268,7 @@ public class EasyVRLibrary {
      *             the values in #ClapSense
      * @return true if the operation is successful
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean Sleep(WakeMode mode) {
         SendCommand(CMD_SLEEP);
         SendArgument(mode.getValue());
@@ -1226,6 +1281,7 @@ public class EasyVRLibrary {
      *
      * @return True if the request is satisfied and the module is back to ready
      */
+    @SuppressWarnings("WeakerAccess")
     public Boolean Stop() {
         SendCommand(CMD_BREAK);
 
@@ -1239,6 +1295,7 @@ public class EasyVRLibrary {
      * @return points to a string of least 32 characters that holds the command label when
      * the function returns
      */
+    @SuppressWarnings("WeakerAccess")
     public String GetNextWordLabel() {
         String name = null;
 
@@ -1282,6 +1339,7 @@ public class EasyVRLibrary {
      * @param group (0-16) is the target group, or one of the values in #Groups
      * @param index (0-31) is the index of the command within the selected group
      */
+    @SuppressWarnings("WeakerAccess")
     public void TrainCommand(int group, int index) {
         if (group < 0 || group > 16) throw new IllegalArgumentException(Integer.toString(group));
         if (index < 0 || group > 16) throw new IllegalArgumentException(Integer.toString(index));
@@ -1298,6 +1356,7 @@ public class EasyVRLibrary {
      * @param group (0-16) is the target group, or one of the values in #Groups
      * @param index (0-31) is the index of the command within the selected group
      */
+    @SuppressWarnings("WeakerAccess")
     public void VerifyCommand(byte group, byte index) {
         if (group < 0 || group > 31) throw new IllegalArgumentException(Integer.toString(group));
         if (index < 0 || index > 31) throw new IllegalArgumentException(Integer.toString(index));
