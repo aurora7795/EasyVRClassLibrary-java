@@ -707,7 +707,11 @@ public class EasyVRLibrary {
      */
     @SuppressWarnings("WeakerAccess")
     public int GetWord() {
-        if (_status.Builtin) return ArgumentEncoding.ConvertArgumentCode((char) Value);
+        if (_status.Builtin) {
+            int value = ArgumentEncoding.ConvertArgumentCode((char) Value);
+            System.out.printf("Word recognized with index: %d%n", value);
+            return value;
+        }
         return -1;
     }
 

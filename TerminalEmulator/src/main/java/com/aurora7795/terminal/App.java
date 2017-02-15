@@ -1,4 +1,4 @@
-package com.aurora7795;
+package com.aurora7795.terminal;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

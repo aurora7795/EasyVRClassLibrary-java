@@ -1,4 +1,4 @@
-package com.aurora7795;
+package com.aurora7795.sampleapp;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

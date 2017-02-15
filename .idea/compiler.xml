@@ -16,7 +16,7 @@
       <module name="EasyVRClassLibrary" target="1.8" />
       <module name="EasyVRClassLibrary-parent" target="1.5" />
       <module name="javafx" target="1.5" />
-      <module name="sampleApp" target="1.5" />
+      <module name="sampleApp" target="1.8" />
       <module name="TerminalEmulator" target="1.5" />
       <module name="testart3" target="1.5" />
     </bytecodeTargetLevel>

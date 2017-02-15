@@ -1,4 +1,4 @@
-package com.aurora7795;
+package com.aurora7795.terminal;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
