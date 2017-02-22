@@ -64,9 +64,6 @@ public class purejavacommWrapper implements ISerialPortWrapper{
      */
     public void Write(char request) throws IOException {
 
-        // to keep responses in sync - on writing, we also send a read and push the response to an internal
-        // buffer
-
         System.out.printf("writing: %s%n", request);
         outs.write(request);
 
