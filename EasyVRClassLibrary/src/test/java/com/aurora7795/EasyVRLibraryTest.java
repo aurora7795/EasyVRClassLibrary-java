@@ -3,7 +3,6 @@ package com.aurora7795;
 import com.aurora7795.EasyVRLibrary.DumpGrammarResult;
 import com.aurora7795.Protocol.*;
 import junit.framework.TestCase;
-import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
 
@@ -18,10 +17,11 @@ public class EasyVRLibraryTest extends TestCase {
     // private String comPort = "COM3";
     private int baudRate = 9600;
 
+    private ISerialPortWrapper testWrapper = new purejavacommWrapper(comPort, baudRate);
 
     public void testAddCommand_GroupOutOfRange_ThrowsException() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         assertThrows(IllegalArgumentException.class, () -> tempVr.AddCommand(17, 12));
     }
@@ -29,7 +29,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testAddCommand_IndexOutOfRange_ThrowsException() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         assertThrows(IllegalArgumentException.class, () -> tempVr.AddCommand(17, 45));
     }
@@ -37,7 +37,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testAddCommand_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         tempVr.ResetAll();
 
         //Act
@@ -49,7 +49,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testChangeBaudrate_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.ChangeBaudrate(Baudrate.B9600);
         //Assert
@@ -60,7 +60,7 @@ public class EasyVRLibraryTest extends TestCase {
     public void testEraseCommand_GroupOutOfRange_ThrowsException() {
 
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         assertThrows(IllegalArgumentException.class, () -> tempVr.EraseCommand(17, 12));
 
@@ -69,7 +69,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testEraseCommand_IndexOutOfRange_ThrowsException() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         assertThrows(IllegalArgumentException.class, () -> tempVr.EraseCommand(2, 45));
     }
@@ -77,7 +77,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testEraseCommand_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         tempVr.ResetAll();
 
         tempVr.AddCommand(1, 0);
@@ -91,14 +91,14 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testGetCommandCount_GroupOutOfRange_ThrowsException() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         assertThrows(IllegalArgumentException.class, () -> tempVr.GetCommandCount(17));
     }
 
     public void testGetCommandCount_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         int response = tempVr.GetCommandCount(3);
         //Assert
@@ -107,7 +107,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testGetGrammarsCount_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         int response = tempVr.GetGrammarsCount();
         //Assert
@@ -117,7 +117,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testPlayPhoneTone_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.PlayPhoneTone(1, 9);
         //Assert
@@ -127,7 +127,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testPlaySound_InvalidVolume_ThrowException() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         assertThrows(IllegalArgumentException.class, () -> tempVr.PlaySound(1, 345));
     }
@@ -135,7 +135,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testPlaySound_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.PlaySound(1, 15);
         //Assert
@@ -145,7 +145,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testRealtimeLipsync_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.RealtimeLipsync(2, 100);
         //Assert
@@ -155,7 +155,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testRemoveCommand_GroupOutOfRange_ThrowsException() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         assertThrows(IllegalArgumentException.class, () -> tempVr.RemoveCommand(17, 12));
     }
@@ -163,7 +163,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testRemoveCommand_IndexOutOfRange_ThrowsException() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         assertThrows(IllegalArgumentException.class, () -> tempVr.RemoveCommand(2, 45));
     }
@@ -171,7 +171,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testRemoveCommand_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         tempVr.ResetAll();
 
         tempVr.AddCommand(1, 0);
@@ -184,7 +184,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testResetAll_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.ResetAll();
         //Assert
@@ -194,7 +194,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetCommandLatency() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.SetCommandLatency(CommandLatency.MODE_NORMAL);
         //Assert
@@ -204,7 +204,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetDelay_OutsideBounds_ThrowsException() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         assertThrows(IllegalArgumentException.class, () -> tempVr.SetDelay(2000));
     }
@@ -212,7 +212,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetDelay_Rounding10_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.SetDelay(23);
         //Assert
@@ -222,7 +222,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetDelay_Rounding100_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.SetDelay(93);
         //Assert
@@ -232,7 +232,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetDelay_Rounding1000_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.SetDelay(223);
         //Assert
@@ -242,7 +242,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetDelay_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.SetDelay(20);
         //Assert
@@ -252,7 +252,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetKnob_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.SetKnob(Protocol.Knob.LOOSE);
         //Assert
@@ -262,7 +262,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetLanguage_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.SetLanguage(Protocol.Language.ENGLISH);
         //Assert
@@ -272,7 +272,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetLevel_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.SetLevel(Protocol.Level.HARD);
         //Assert
@@ -282,7 +282,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetMicDistance_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.SetMicDistance(Protocol.Distance.FAR_MIC);
         //Assert
@@ -292,7 +292,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetTimeout_InvalidTimeout_ThrowsException() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         assertThrows(IllegalArgumentException.class, () -> tempVr.SetTimeout(60));
 
@@ -301,7 +301,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetTimeout_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.SetTimeout(1);
         //Assert
@@ -311,7 +311,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testSetTrailingSilence_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.SetTrailingSilence(Protocol.TrailingSilence.TRAILING_300MS);
         //Assert
@@ -321,7 +321,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testStop_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.Stop();
         //Assert
@@ -331,7 +331,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testGetId_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         ModuleId response = tempVr.GetId();
         //Assert
@@ -341,7 +341,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testCheckMessages_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.CheckMessages();
         //Assert
@@ -351,7 +351,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testDetect_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         Boolean response = tempVr.Detect();
         //Assert
@@ -361,7 +361,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testDumpGrammar_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         //Act
         DumpGrammarResult response = tempVr.DumpGrammar(0);
         //Assert
@@ -373,7 +373,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testDumpMessage_NoMessageAvailable_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         tempVr.ResetAll();
         //Act
         DumpMessageResult response = tempVr.DumpMessage(0);
@@ -385,7 +385,7 @@ public class EasyVRLibraryTest extends TestCase {
 
 
     public void testPlayMessageAsync_Success() {
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
 
         tempVr.PlayMessageAsync(1, Protocol.MessageSpeed.SPEED_NORMAL, Protocol.MessageAttenuation.ATTEN_NONE);
 
@@ -393,13 +393,13 @@ public class EasyVRLibraryTest extends TestCase {
 
 
     public void testPlaySoundAsync_Success() {
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         tempVr.PlaySoundAsync(1, 15);
     }
 
 
     public void testRecordMessageAsync() {
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
 
         tempVr.RecordMessageAsync(1, MessageType.MSG_EMPTY, 5);
 
@@ -414,7 +414,7 @@ public class EasyVRLibraryTest extends TestCase {
 
 
     public void testDumpCommand() {
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
 
 
         DumpCommandResult response = tempVr.DumpCommand(1, 0);
@@ -426,7 +426,7 @@ public class EasyVRLibraryTest extends TestCase {
 
 
     public void testSetCommandLabel_Success() {
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         tempVr.ResetAll();
         Boolean response = tempVr.AddCommand(0, 0);
 
@@ -444,7 +444,7 @@ public class EasyVRLibraryTest extends TestCase {
 
 
     public void testDumpSoundTable_Success() {
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         tempVr.ResetAll();
 
         DumpSoundTableResult STresponse = tempVr.DumpSoundTable();
@@ -456,7 +456,7 @@ public class EasyVRLibraryTest extends TestCase {
 
 
     public void testFixMessages_Success() {
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
         tempVr.ResetAll();
 
         Boolean response = tempVr.FixMessages(true);
@@ -467,7 +467,7 @@ public class EasyVRLibraryTest extends TestCase {
 
     public void testGetNextWordLabel_Success() {
         //Arrange
-        EasyVRLibrary tempVr = new EasyVRLibrary(comPort, baudRate);
+        EasyVRLibrary tempVr = new EasyVRLibrary(testWrapper);
 
         DumpGrammarResult response = tempVr.DumpGrammar(0);
         assertTrue(response != null);
@@ -476,7 +476,6 @@ public class EasyVRLibraryTest extends TestCase {
         String name = tempVr.GetNextWordLabel();
 
         //Assert
-        assertTrue(response != null);
         assertTrue(Objects.equals(name, "ROBOT"));
 
     }

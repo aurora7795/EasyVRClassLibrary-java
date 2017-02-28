@@ -18,26 +18,26 @@ public enum ModuleId {
     EASYVR3_3(11), //*< Identifies an EasyVR module version 3, firmware revision 3
     EASYVR3_4(12); //*< Identifies an EasyVR module version 3, firmware revision 4
 
-    private int value;
+    private static final Map<Integer, ModuleId> intToTypeMap = new HashMap<>();
 
-    ModuleId(int i) {
-        value = i;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    private static final Map<Integer, ModuleId> intToTypeMap = new HashMap<Integer, ModuleId>();
     static {
         for (ModuleId type : ModuleId.values()) {
             intToTypeMap.put(type.value, type);
         }
     }
 
+    private int value;
+
+    ModuleId(int i) {
+        value = i;
+    }
+
     public static ModuleId fromInt(int i) {
-        ModuleId type = intToTypeMap.get(Integer.valueOf(i));
-        return type;
+        return intToTypeMap.get(i);
+    }
+
+    public int getValue() {
+        return value;
     }
 
 }

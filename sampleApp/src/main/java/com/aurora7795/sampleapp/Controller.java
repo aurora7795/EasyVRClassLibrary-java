@@ -1,8 +1,6 @@
 package com.aurora7795.sampleapp;
 
-import com.aurora7795.EasyVRLibrary;
-import com.aurora7795.ModuleId;
-import com.aurora7795.purejavacommWrapper;
+import com.aurora7795.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -49,11 +47,12 @@ public class Controller {
                 return new Task<Void>() {
                     @Override
                     protected Void call() throws InterruptedException {
-                        // You code you want to execute in service backgroundgoes here
+
                         //Logic for simple recognition activity
 
                         // Set a 5 second timeout for the recognition (optional)
                         _tempVr.SetTimeout(5);
+                        _tempVr.SetMicDistance(Protocol.Distance.FAR_MIC);
 
                         updateMessage(String.format("Speak%s", System.getProperty("line.separator")));
 
@@ -89,7 +88,8 @@ public class Controller {
     public void connectBtnClick(ActionEvent actionEvent) {
 
         String port = portListBox.getValue();
-        _tempVr = new EasyVRLibrary(port, 9600);
+        ISerialPortWrapper serialPortWrapper = new purejavacommWrapper(port, 9600);
+        _tempVr = new EasyVRLibrary(serialPortWrapper);
 
         responseTB.appendText(String.format("Connected to %s%s", port, System.getProperty("line.separator")));
         shouldBeDisabled.setValue(false);

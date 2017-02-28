@@ -13,7 +13,6 @@ import java.net.URL;
  * Created by Martin Bradford Gago on 15/02/2017.
  */
 public class App extends Application{
-    private FXMLLoader fxmlLoader;
 
     public static void main(String[] args) {
         launch(args);
@@ -22,7 +21,7 @@ public class App extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        fxmlLoader = new FXMLLoader();
+        FXMLLoader fxmlLoader = new FXMLLoader();
 
         URL location = getClass().getResource("/fxml/sample.fxml");
         fxmlLoader = new FXMLLoader();

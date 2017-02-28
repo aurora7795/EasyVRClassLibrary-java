@@ -13,6 +13,7 @@ public class EasyVRLibrary {
     public static int EASYVR_STORAGE_TIMEOUT = 500;
     public static int DEF_TIMEOUT = EASYVR_RX_TIMEOUT;
     public static int STORAGE_TIMEOUT = EASYVR_STORAGE_TIMEOUT;
+    private static ISerialPortWrapper _serialPort;
     public int EASYVR_WAKE_TIMEOUT = 200;
     public int EASYVR_PLAY_TIMEOUT = 5000;
     public int EASYVR_TOKEN_TIMEOUT = 1500;
@@ -22,12 +23,10 @@ public class EasyVRLibrary {
     private int Value;
     private Status _status = new Status();
 
-    static ISerialPortWrapper _serialPort;
-
-    public EasyVRLibrary(String portName, int baudRate) {
+    public EasyVRLibrary(ISerialPortWrapper serialPortLibrary) {
         if (_serialPort != null) return;
         // Create the serial port with basic settings
-        _serialPort = new purejavacommWrapper(portName, baudRate);
+        _serialPort = serialPortLibrary;
 
         Value = -1;
         Group = -1;
@@ -221,7 +220,7 @@ public class EasyVRLibrary {
         char rx;
         rx = ReceiveArgumentAsChar();
 
-        response.flags = (byte) (rx == -1 ? 32 : rx);
+        response.flags = (byte) ((rx == -1) ? 32 : rx);
 
         rx = ReceiveArgumentAsChar();
 
@@ -281,6 +280,7 @@ public class EasyVRLibrary {
         }
 
         _status.V = 0;
+
         return response;
     }
 
@@ -341,6 +341,7 @@ public class EasyVRLibrary {
             }
 
         }
+        response.name = tempString.toString();
         return response;
     }
 
@@ -530,7 +531,7 @@ public class EasyVRLibrary {
     /**
      * Gets the recognised command index if any.
      *
-     * @return (0-31) is the command index if recognition is successful, (-1) if no command has been recognized or an error
+     * @return (0 to 31) is the command index if recognition is successful, (-1) if no command has been recognized or an error
      * occurred
      */
     @SuppressWarnings("WeakerAccess")
@@ -562,7 +563,7 @@ public class EasyVRLibrary {
     /**
      * Gets the last error code if any.
      *
-     * @return (0-255) is the error code, (-1) if no error occurred
+     * @return (0 to 255) is the error code, (-1) if no error occurred
      */
     @SuppressWarnings("WeakerAccess")
     public short GetError() {
@@ -702,7 +703,7 @@ public class EasyVRLibrary {
     /**
      * Gets the recognised word index if any, from built-in sets or custom grammars.
      *
-     * @return (0-31) is the command index if recognition is successful, (-1) if no built-in word has been recognized or an
+     * @return (0 to 31) is the command index if recognition is successful, (-1) if no built-in word has been recognized or an
      * error occurred
      */
     @SuppressWarnings("WeakerAccess")
@@ -824,7 +825,7 @@ public class EasyVRLibrary {
         SendCommand(CMD_PLAY_RP);
         SendArgument(-1);
         SendArgument(index);
-        SendArgument(((int) speed.getValue() << 2) | ((int) attenuation.getValue() & 3));
+        SendArgument((speed.getValue() << 2) | (attenuation.getValue() & 3));
     }
 
 
@@ -1059,9 +1060,7 @@ public class EasyVRLibrary {
         SendArgument(0);
         SendArgument(0);
 
-        if (GetResponse(EASYVR_TOKEN_TIMEOUT) == STS_SUCCESS)
-            return true;
-        return false;
+        return GetResponse(EASYVR_TOKEN_TIMEOUT) == STS_SUCCESS;
     }
 
     /// <summary>
@@ -1301,7 +1300,7 @@ public class EasyVRLibrary {
      */
     @SuppressWarnings("WeakerAccess")
     public String GetNextWordLabel() {
-        String name = null;
+        String name;
 
         Character count = ReceiveArgumentAsChar();
 

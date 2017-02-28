@@ -1,14 +1,13 @@
 package com.aurora7795;
 
+import purejavacomm.*;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
-
-import purejavacomm.*;
 
 /**
  * Created by aurora7795 on 13/02/2017.
@@ -32,35 +31,41 @@ public class purejavacommWrapper implements ISerialPortWrapper{
             ins = new DataInputStream(_serialPort.getInputStream());
             outs = new DataOutputStream(_serialPort.getOutputStream());
 
-        } catch (PortInUseException e) {
-            e.printStackTrace();
-        } catch (NoSuchPortException e) {
-            e.printStackTrace();
-        } catch (UnsupportedCommOperationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (PortInUseException | NoSuchPortException | IOException | UnsupportedCommOperationException e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<String> getAvailableSerialPorts() {
+        List<String> list = new ArrayList<>();
+
+        Enumeration portList = CommPortIdentifier.getPortIdentifiers();
+        while (portList.hasMoreElements()) {
+            CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();
+            if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+                list.add(portId.getName());
+            }
+        }
+        return list;
     }
 
     /**
      * Reads a byte off the internal buffer
      *
      * @return The byte output from the serial port
-     * @throws IOException
+     * @throws IOException Thrown if something went wrong with the read of the byte off the buffer
      */
     public char Read() throws IOException {
 
         byte b = (byte) ins.read();
-        char c = ((char) b);
-        return c;
+        return ((char) b);
     }
 
     /**
      * Writes a character to the serial port
      *
      * @param request the string to send to the serial port
-     * @throws IOException
+     * @throws IOException Thrown if something went wrong with the write operation
      */
     public void Write(char request) throws IOException {
 
@@ -107,18 +112,5 @@ public class purejavacommWrapper implements ISerialPortWrapper{
             System.out.println("Timeout disabled.");
         }
 
-    }
-
-    public static List<String> getAvailableSerialPorts(){
-    List<String> list = new ArrayList<String>();
-
-    Enumeration portList = CommPortIdentifier.getPortIdentifiers();
-    while (portList.hasMoreElements()) {
-        CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();
-        if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-            list.add(portId.getName());
-        }
-    }
-    return list;
     }
 }
